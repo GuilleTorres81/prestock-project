@@ -1,24 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+// Components
+import Menu from './components/Menu';
+import HomeScreen from './components/screens/HomeScreen';
+import PrintScreen from './components/screens/PrintScreen';
+import StockScreen from './components/screens/StockScreen';
+import DefaultersScreen from './components/screens/DefaultersScreen';
 
 function App() {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/posts/')
-      .then(response => setPosts(response.data))
-      .catch(error => console.error(error));
-  }, []);
-
   return (
-    <div>
-      <h1>Posts desde Django</h1>
-      <ul>
-        {posts.map(post => <li key={post.id}>{post.title}</li>)}
-      </ul>
-    </div>
+    <BrowserRouter>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/impresiones" element={<PrintScreen />} />
+        <Route path="/inventario" element={<StockScreen />} />
+        <Route path="/morosos" element={<DefaultersScreen />} />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
