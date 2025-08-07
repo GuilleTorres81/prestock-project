@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.fixed-height-card {
+  height: 80vh; /* o la altura que quieras mantener */
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+}
+
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}

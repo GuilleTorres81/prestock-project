@@ -1,6 +1,8 @@
-from django.urls import path
-from .views import *
+from rest_framework.routers import DefaultRouter
+from .views import PrestamoViewSet
 
-urlpatterns = [
-    path('/', lista_prestamos, name='lista'),
-]
+router = DefaultRouter()
+router.register(r'api', PrestamoViewSet)
+
+urlpatterns = router.urls
+

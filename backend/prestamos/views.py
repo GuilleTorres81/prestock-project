@@ -1,18 +1,20 @@
 from django.shortcuts import render
+from datetime import datetime
+from rest_framework import viewsets
+from .models import Prestamo
+from .serializers import PrestamoSerializer
 
-# Create your views here.
-def lista_prestamos(request):
-    # Aquí iría la lógica para obtener la lista de préstamos
-    prestamos = []  # Esta lista debería ser reemplazada por la lógica real
-    return render(request, 'prestamos/lista_prestamos.html', {'prestamos': prestamos})
+def crear_prestamo(request):
+    try:
+        if request.method == 'POST':
+            prestamo = Prestamo.objects.create(
+                estudiante = request.POST['estudiante'],
+                elemento = request.POST['elemento']
+            )
+    except Exception as e:
+        print(f"Error creating loan: {e}")
+        raise
 
-def prestamos_datatable(request):
-    # Aquí iría la lógica para obtener los datos de los préstamos para el DataTable
-    prestamos_data = []  # Esta lista debería ser reemplazada por la lógica real
-    return render(request, 'prestamos/prestamos_datatable.html', {'prestamos_data': prestamos_data})
-
-def prestamos_create(request):
-    if request.method == 'POST':
-        # Aquí iría la lógica para crear un nuevo préstamo
-        pass  # Reemplazar con la lógica real
-    return render(request, 'prestamos/prestamos_create.html')
+class PrestamoViewSet(viewsets.ModelViewSet):
+    queryset = Prestamo.objects.all().order_by('-fecha_prestamo')
+    serializer_class = PrestamoSerializer

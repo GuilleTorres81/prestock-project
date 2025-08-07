@@ -1,6 +1,8 @@
-from django.urls import path
-from .views import *
+from rest_framework.routers import DefaultRouter
+from .views import ElementoViewSet
 
-urlpatterns = [
-    path('new/', nuevo_elemento, name='nuevo_elemento'),
-]
+router = DefaultRouter()
+router.register(r'api', ElementoViewSet)
+
+urlpatterns = router.urls
+

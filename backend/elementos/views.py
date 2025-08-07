@@ -1,8 +1,6 @@
-from django.shortcuts import render
-
-# Create your views here.
-def nuevo_elemento(request):
-    if request.method == 'POST':
-        # Aquí iría la lógica para procesar el formulario de nuevo elemento
-        pass
-    return render(request, 'elementos/nuevo_elemento.html')
+from rest_framework import viewsets
+from .models import Elemento
+from .serializers import ElementoSerializer
+class ElementoViewSet(viewsets.ModelViewSet):
+    queryset = Elemento.objects.all().order_by('nombre')
+    serializer_class = ElementoSerializer
