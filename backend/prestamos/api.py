@@ -14,6 +14,11 @@ class PrestamoViewSet(viewsets.ModelViewSet):
         end_of_day = make_aware(datetime.combine(today, datetime.max.time()))
         return Prestamo.objects.filter(fecha_prestamo__range=(start_of_day, end_of_day))
     
+    def get_serializer_class(self):
+        if self.action in ['list', 'retrieve']:
+            return PrestamoReadSerializer
+        return PrestamoSerializer
+    
 class EstudianteViewSet(viewsets.ModelViewSet):
     queryset = Estudiante.objects.all().order_by('apellido')
     serializer_class = EstudianteSerializer
