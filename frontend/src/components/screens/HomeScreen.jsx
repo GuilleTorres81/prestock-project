@@ -69,6 +69,41 @@ function HomeScreen() {
             : "Añadir elementos";
     // Modal
     const [showElementsModal, setShowElementsModal] = useState(false);
+    const [prestamoEditando, setPrestamoEditando] = useState(null);
+
+    const abrirModalEdicion = (prestamo) => {
+        const elementosIniciales = prestamo.detalle_elementos.map((de) => ({
+            elemento_id: de.elemento_id,
+            nombre: de.elemento.nombre,
+            cantidad: de.cantidad,
+        }));
+        setPrestamoEditando({ id: prestamo.id, elementosIniciales });
+        setShowElementsModal(true);
+    };
+
+    const editarPrestamo = async (elementos) => {
+        if (!prestamoEditando) return;
+        const estudiante = prestamos.find((p) => p.id === prestamoEditando.id).estudiante;
+        try {
+            const res = await fetch(
+                `http://localhost:8000/api/prestamos/${prestamoEditando.id}/`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ estudiante_id: estudiante.id, elementos }),
+                }
+            );
+            if (!res.ok) throw new Error(`Error ${res.status}`);
+            fetch("http://localhost:8000/api/prestamos/")
+                .then((r) => r.json())
+                .then((data) => setPrestamos(data));
+        } catch (error) {
+            console.error("Error al editar préstamo:", error);
+            alert("Ocurrió un error al editar el préstamo.");
+        } finally {
+            setPrestamoEditando(null);
+        }
+    };
     const handleSelectEstudiante = (est) => {
         if (est) {
             setNombreCompleto(`${est.apellido}, ${est.nombre}`);
@@ -265,9 +300,7 @@ function HomeScreen() {
 
                                                     <Button
                                                         className="btn-info btn-sm text-white"
-                                                        onClick={
-                                                            setShowElementsModal
-                                                        }
+                                                        onClick={() => abrirModalEdicion(prestamo)}
                                                     >
                                                         <i className="bi bi-pencil-square fs-6"></i>
                                                     </Button>
@@ -309,8 +342,9 @@ function HomeScreen() {
             </div>
             <ElementsModal
                 show={showElementsModal}
-                handleClose={() => setShowElementsModal(false)}
-                onSave={(elementos) => setElementosSeleccionados(elementos)}
+                handleClose={() => { setShowElementsModal(false); setPrestamoEditando(null); }}
+                onSave={prestamoEditando ? editarPrestamo : (elementos) => setElementosSeleccionados(elementos)}
+                elementosIniciales={prestamoEditando?.elementosIniciales ?? []}
             />
         </Container>
     );

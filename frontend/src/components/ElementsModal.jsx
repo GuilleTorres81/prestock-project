@@ -1,13 +1,22 @@
 import { Modal, Button } from "react-bootstrap";
 import Table from "./Table";
 import SingleSelect from "./SingleSelect";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function ElementsModal({ show, handleClose, onSave }) {
+export default function ElementsModal({ show, handleClose, onSave, elementosIniciales = [] }) {
     const [elementosAgregados, setElementosAgregados] = useState([]);
     const [elementoSeleccionado, setElementoSeleccionado] = useState(null);
     const [labelElemento, setLabelElemento] = useState("");
     const [cantidad, setCantidad] = useState(1);
+
+    useEffect(() => {
+        if (show) {
+            setElementosAgregados(elementosIniciales);
+            setElementoSeleccionado(null);
+            setLabelElemento("");
+            setCantidad(1);
+        }
+    }, [show]);
 
     const handleSelectElemento = (e) => {
         if (e) {

@@ -36,6 +36,13 @@ class PrestamoSerializer(serializers.ModelSerializer):
         for el in elementos_data:
             PrestamoElemento.objects.create(prestamo=prestamo, **el)
         return prestamo
+
+    def update(self, instance, validated_data):
+        elementos_data = validated_data.pop("elementos", [])
+        instance.detalle_elementos.all().delete()
+        for el in elementos_data:
+            PrestamoElemento.objects.create(prestamo=instance, **el)
+        return instance
     
 class PrestamoDevolverSerializer(serializers.ModelSerializer):
     class Meta:
