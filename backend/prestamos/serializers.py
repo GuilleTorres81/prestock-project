@@ -37,6 +37,11 @@ class PrestamoSerializer(serializers.ModelSerializer):
             PrestamoElemento.objects.create(prestamo=prestamo, **el)
         return prestamo
     
+class PrestamoDevolverSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prestamo
+        fields = ("devuelto", "fecha_devolucion")
+
 class PrestamoReadSerializer(serializers.ModelSerializer):
     estudiante = EstudianteSerializer(read_only=True)
     detalle_elementos = PrestamoElementoSerializer(many=True, read_only=True)

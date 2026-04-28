@@ -17,6 +17,8 @@ class PrestamoViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
             return PrestamoReadSerializer
+        if self.action in ['partial_update', 'update']:
+            return PrestamoDevolverSerializer
         return PrestamoSerializer
     
 class EstudianteViewSet(viewsets.ModelViewSet):
